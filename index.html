@@ -1,113 +1,63 @@
+
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>영단어 게임 - 초중고 영단어 학습</title>
-    <link rel="stylesheet" href="style.css">
+<html lang="en">
+  <head>
+    <meta charset="UTF-M" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voca Master: The Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-bg': '#1a1a2e',
+              'brand-surface': '#16213e',
+              'brand-primary': '#0f3460',
+              'brand-secondary': '#e94560',
+              'brand-accent': '#53a8b6',
+              'brand-text': '#dcdcdc',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Orbitron', 'sans-serif'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+              'slide-in-up': 'slideInUp 0.5s ease-in-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: 0 },
+                '100%': { opacity: 1 },
+              },
+              slideInUp: {
+                '0%': { transform: 'translateY(20px)', opacity: 0 },
+                '100%': { transform: 'translateY(0)', opacity: 1 },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.24.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>📚 영단어 게임</h1>
-            <p class="subtitle">초등 · 중등 · 고등 영단어를 재미있게 배워보세요!</p>
-        </header>
-
-        <!-- 메인 메뉴 -->
-        <div id="main-menu" class="menu-screen">
-            <div class="level-selection">
-                <h2>레벨을 선택하세요</h2>
-                <div class="level-buttons">
-                    <button class="level-btn elementary" data-level="elementary">
-                        <span class="level-icon">🎒</span>
-                        <span class="level-name">초등학교</span>
-                    </button>
-                    <button class="level-btn middle" data-level="middle">
-                        <span class="level-icon">📖</span>
-                        <span class="level-name">중학교</span>
-                    </button>
-                    <button class="level-btn high" data-level="high">
-                        <span class="level-icon">🎓</span>
-                        <span class="level-name">고등학교</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 게임 화면 -->
-        <div id="game-screen" class="game-screen hidden">
-            <div class="game-header">
-                <div class="score-board">
-                    <div class="score-item">
-                        <span class="score-label">점수</span>
-                        <span id="score" class="score-value">0</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="score-label">정답</span>
-                        <span id="correct-count" class="score-value">0</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="score-label">오답</span>
-                        <span id="wrong-count" class="score-value">0</span>
-                    </div>
-                </div>
-                <button id="back-btn" class="back-btn">← 돌아가기</button>
-            </div>
-
-            <div class="game-content">
-                <div class="word-display">
-                    <div class="word-card">
-                        <div class="word-korean" id="word-korean"></div>
-                        <div class="word-hint">뜻을 맞춰보세요!</div>
-                    </div>
-                </div>
-
-                <div class="options-container">
-                    <div id="options" class="options">
-                        <!-- 옵션 버튼들이 여기에 동적으로 생성됩니다 -->
-                    </div>
-                </div>
-
-                <div class="feedback-message" id="feedback"></div>
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-        </div>
-
-        <!-- 결과 화면 -->
-        <div id="result-screen" class="result-screen hidden">
-            <div class="result-content">
-                <h2>게임 종료!</h2>
-                <div class="result-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">최종 점수</span>
-                        <span id="final-score" class="stat-value">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">정답률</span>
-                        <span id="accuracy" class="stat-value">0%</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">맞춘 문제</span>
-                        <span id="final-correct" class="stat-value">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">틀린 문제</span>
-                        <span id="final-wrong" class="stat-value">0</span>
-                    </div>
-                </div>
-                <div class="result-buttons">
-                    <button id="restart-btn" class="action-btn">다시 하기</button>
-                    <button id="home-btn" class="action-btn secondary">홈으로</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="words.js"></script>
-    <script src="script.js"></script>
-</body>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
-
